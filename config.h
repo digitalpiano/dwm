@@ -7,15 +7,43 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
+static const char stfont[]       = "monospace:size=8";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+
+/* solarized colors http://ethanschoonover.com/solarized */
+static const char s_base03[]        = "#002b36";
+static const char s_base02[]        = "#073642";
+static const char s_base01[]        = "#586e75";
+static const char s_base00[]        = "#657b83";
+static const char s_base0[]         = "#839496";
+static const char s_base1[]         = "#93a1a1";
+static const char s_base2[]         = "#eee8d5";
+static const char s_base3[]         = "#fdf6e3";
+
+/* fitting to background */
+/* Norm */
+static const char light_blue0[]      = "#8dcce0";
+static const char light_grey0[]      = "#434954";
+static const char dark_grey0[]       = "#232937";
+/* Sel */
+//static const char light_blue1[]      = "#c3e4ef";
+//static const char light_grey1[]      = "#666f7f";
+//static const char dark_grey1[]       = "#3c465d";
+
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	//[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
+	//[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+    //[SchemeNorm] = { s_base00, s_base3, s_base02 },     /* SchemeNorm light */
+    //[SchemeSel]  = { s_base00, s_base2, s_base02},      /* SchemeSel light */
+    //[SchemeNorm] = { s_base0, s_base03, s_base2 },      /* SchemeNorm dark */
+    //[SchemeSel]  = { s_base0, s_base02, s_base2 },      /* SchemeSel dark */
+    [SchemeNorm] = { light_blue0, dark_grey0, light_grey0 },      /* own */
+    [SchemeSel]  = { light_blue0, light_grey0, light_grey0 },      /* own */
 };
 
 /* tagging */
@@ -34,7 +62,7 @@ static const Rule rules[] = {
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
-static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
@@ -58,14 +86,20 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 //static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
-//static const char *termcmd[]  = { "xterm", NULL };
-static const char *termcmd[]  = { "st", NULL };
+//solarized
+//static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", s_base03, "-nf", s_base0, "-sb", s_base02, "-sf", s_base0, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", dark_grey0, "-nf", light_blue0, "-sb", light_grey0, "-sf", light_blue0, NULL };
+//static const char *termcmd[]  = { "st", NULL };
+static const char *termcmd[]  = { "st", "-f", stfont };
+static const char *slockcmd[]  = { "slock", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY|ShiftMask,             XK_l,      spawn,          {.v = slockcmd } },
+	{ MODKEY,                       XK_s,      spawn,          SHCMD("maim ~/pictures/screenshots/screenshot-$(date '+%y%m%d-%H%M-%S').png") },
+	{ MODKEY|ShiftMask,             XK_s,      spawn,          SHCMD("maim -s ~/pictures/screenshots/screenshot-$(date '+%y%m%d-%H%M-%S').png") },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
